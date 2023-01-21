@@ -1,7 +1,7 @@
 ( declare-project
-  :name "jaylib"
-  :description "Janet bindings to Raylib"
-  :url "https://github.com/janet-lang/jaylib"
+  :name "freja-jaylib"
+  :description "Janet bindings to Raylib. Specific module for freja changes to jaylib."
+  :url "https://github.com/saikyun/freja-jaylib"
   :author "Calvin Rose <calsrose@gmail.com>")
 
 (def o (os/which))
