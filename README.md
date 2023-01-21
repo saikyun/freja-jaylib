@@ -143,5 +143,5 @@ Extracts the 'Texture2D' of a given 'Font'.
 ### specific for dealing with freja-jaylib
 
 ```
-git checkout original-master && git pull && git checkout master && git merge original-master
+git checkout my-jaylib-master && git pull && git checkout main
 ```
