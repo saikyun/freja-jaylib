@@ -1,4 +1,4 @@
-( declare-project
+(declare-project
   :name "freja-jaylib"
   :description "Janet bindings to Raylib. Specific module for freja changes to jaylib."
   :url "https://github.com/saikyun/freja-jaylib"
@@ -22,7 +22,7 @@
     '["-lpthread"]))
 
 (declare-native
-  :name "jaylib"
+  :name "freja-jaylib"
 
   :cflags [;default-cflags ;cflags]
 
