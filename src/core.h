@@ -7,11 +7,6 @@ static Janet cfun_InitWindow(int32_t argc, Janet *argv) {
     return janet_wrap_nil();
 }
 
-static Janet cfun_Yeah(int32_t argc, Janet *argv) {
-    (void) argv;
-    printf("yeah\n");
-    return janet_wrap_nil();
-}
 static Janet cfun_WindowShouldClose(int32_t argc, Janet *argv) {
     (void) argv;
     janet_fixarity(argc, 0);
@@ -702,7 +697,7 @@ static Janet cfun_GetDroppedFiles(int32_t argc, Janet *argv) {
     for (int i = 0; i < count; i++) {
         janet_array_push(array, janet_cstringv(results[i]));
     }
-    return janet_wrap_array(results);
+    return janet_wrap_array(array);
 }
 
 static Janet cfun_ClearDroppedFiles(int32_t argc, Janet *argv) {
@@ -1304,6 +1299,5 @@ static JanetReg core_cfuns[] = {
         "(end-scissor-mode)\n\n"
         "Ends scissor mode. See `begin-scissor-mode`."
     },
-    {"yeah", cfun_Yeah, NULL},
     {NULL, NULL, NULL}
 };

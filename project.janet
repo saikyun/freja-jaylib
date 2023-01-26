@@ -8,7 +8,7 @@
 
 (def cflags
   (case o
-    :macos '["-Iraylib/src" "-ObjC" "-Iraylib/src/external/glfw/include"]
+    :macos '["-Iraylib/src" "-ObjC" "-Iraylib/src/external/glfw/include" "-Wno-deprecated-declarations"]
     :windows ["-Iraylib/src" "-Iraylib/src/external/glfw/include" ]
     #default
     '["-Iraylib/src"]))
@@ -45,6 +45,8 @@
 (declare-native
   :name "freja-jaylib"
 
+  :defines {"PLATFORM_DESKTOP" true "_POSIX_C_SOURCE" "200809L" "_DARWIN_C_SOURCE" (if (= o :macos) "1" nil)}
+
   :cflags [;default-cflags ;cflags]
 
   :source ["src/main.c"]
@@ -59,7 +61,8 @@
             "src/image.h"
             "src/shapes.h"
             "src/3d.h"
-            "src/rlgl.h"]
+            "src/rlgl.h"
+            "src/glfw.h"]
 
   :lflags [;default-lflags ;lflags]
   
