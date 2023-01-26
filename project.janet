@@ -21,24 +21,35 @@
     #default
     '["-lpthread"]))
 
+(def raylib
+  (declare-native
+    :name "raylib"
+
+    :cflags [;default-cflags ;cflags]
+
+    :defines {"PLATFORM_DESKTOP" true "_POSIX_C_SOURCE" "200809L" "_DARWIN_C_SOURCE" (if (= o :macos) "1" nil)}
+
+    :source [# raylib sources
+            "raylib/src/rcore.c"
+            "raylib/src/rmodels.c"
+            "raylib/src/raudio.c"
+            "raylib/src/rglfw.c"
+            "raylib/src/rshapes.c"
+            "raylib/src/rtext.c"
+            "raylib/src/rtextures.c"
+            "raylib/src/utils.c"]
+
+    :lflags [;default-lflags ;lflags]))
+
+
 (declare-native
   :name "freja-jaylib"
 
   :cflags [;default-cflags ;cflags]
 
-  :defines {"PLATFORM_DESKTOP" true "_POSIX_C_SOURCE" "200809L" "_DARWIN_C_SOURCE" (if (= o :macos) "1" nil)}
+  :source ["src/main.c"]
 
-  :source ["src/main.c"
-
-           # raylib sources
-           "raylib/src/rcore.c"
-           "raylib/src/rmodels.c"
-           "raylib/src/raudio.c"
-           "raylib/src/rglfw.c"
-           "raylib/src/rshapes.c"
-           "raylib/src/rtext.c"
-           "raylib/src/rtextures.c"
-           "raylib/src/utils.c"]
+  :objects ["build/raylib.a"]
 
   :headers ["src/core.h"
             "src/types.h"
@@ -50,7 +61,10 @@
             "src/3d.h"
             "src/rlgl.h"]
 
-  :lflags [;default-lflags ;lflags])
+  :lflags [;default-lflags ;lflags]
+  
+  :deps [(raylib :native)
+         (raylib :static)])
 
 # `jpm run repl` to run a repl with access to jaylib
 (phony "repl" ["build"]

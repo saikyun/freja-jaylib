@@ -7,6 +7,11 @@ static Janet cfun_InitWindow(int32_t argc, Janet *argv) {
     return janet_wrap_nil();
 }
 
+static Janet cfun_Yeah(int32_t argc, Janet *argv) {
+    (void) argv;
+    printf("yeah\n");
+    return janet_wrap_nil();
+}
 static Janet cfun_WindowShouldClose(int32_t argc, Janet *argv) {
     (void) argv;
     janet_fixarity(argc, 0);
@@ -1299,5 +1304,6 @@ static JanetReg core_cfuns[] = {
         "(end-scissor-mode)\n\n"
         "Ends scissor mode. See `begin-scissor-mode`."
     },
+    {"yeah", cfun_Yeah, NULL},
     {NULL, NULL, NULL}
 };
