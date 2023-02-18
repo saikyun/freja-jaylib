@@ -1,4 +1,6 @@
 JanetFunction *key_callback = NULL;
+JanetFunction *char_callback = NULL;
+JanetFunction *scroll_callback = NULL;
 
 static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
@@ -55,6 +57,25 @@ static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, i
     janet_call(key_callback, 4, args);
 }
 
+static void CharCallback(GLFWwindow *window, unsigned int codepoint)
+{
+    Janet args[1];
+    
+    args[0] = janet_wrap_integer(codepoint);
+    
+    janet_call(char_callback, 1, args);
+}
+
+static void ScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    Janet args[2];
+    
+    args[0] = janet_wrap_number(xoffset);
+    args[1] = janet_wrap_number(yoffset);
+    
+    janet_call(scroll_callback, 2, args);
+}
+
 static Janet cfun_SetKeyCallback(int32_t argc, Janet *argv)
 {
     janet_fixarity(argc, 1);
@@ -82,6 +103,62 @@ static Janet cfun_SetKeyCallback(int32_t argc, Janet *argv)
     return janet_wrap_nil();
 }
 
+static Janet cfun_SetCharCallback(int32_t argc, Janet *argv)
+{
+    janet_fixarity(argc, 1);
+
+    JanetFunction *f;
+    if (janet_checktype(argv[0], JANET_NIL)) {
+        f = NULL;
+    } else {
+        f = janet_getfunction(argv, 0);
+    }
+
+    if (NULL != char_callback) {
+        janet_gcunroot(janet_wrap_function(char_callback));
+    }
+
+    char_callback = f;
+
+    if (f) {
+        janet_gcroot(janet_wrap_function(char_callback));
+        glfwSetCharCallback(GetGLFWWindow(), CharCallback);
+    } else {
+        glfwSetCharCallback(GetGLFWWindow(), NULL);
+    }
+
+    return janet_wrap_nil();
+}
+
+static Janet cfun_SetScrollCallback(int32_t argc, Janet *argv)
+{
+    janet_fixarity(argc, 1);
+
+    JanetFunction *f;
+    if (janet_checktype(argv[0], JANET_NIL)) {
+        f = NULL;
+    } else {
+        f = janet_getfunction(argv, 0);
+    }
+
+    if (NULL != scroll_callback) {
+        janet_gcunroot(janet_wrap_function(scroll_callback));
+    }
+
+    scroll_callback = f;
+
+    if (f) {
+        janet_gcroot(janet_wrap_function(scroll_callback));
+        glfwSetScrollCallback(GetGLFWWindow(), ScrollCallback);
+    } else {
+        glfwSetScrollCallback(GetGLFWWindow(), NULL);
+    }
+
+    return janet_wrap_nil();
+}
+
 static JanetReg glfw_cfuns[] = {
     {"set-key-callback", cfun_SetKeyCallback, NULL},
+    {"set-char-callback", cfun_SetCharCallback, NULL},
+    {"set-scroll-callback", cfun_SetScrollCallback, NULL},
     {NULL, NULL, NULL}};

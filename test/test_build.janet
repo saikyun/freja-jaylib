@@ -1,5 +1,7 @@
 (use ../build/freja-jaylib)
 
+(defn main [& args]
+
 (init-window 800 600 "Game of Life")
 (set-target-fps 60)
 
@@ -15,3 +17,4 @@
     (end-drawing))
 
 (close-window)
+)
