@@ -687,38 +687,18 @@ static Janet cfun_GetTouchPosition(int32_t argc, Janet *argv) {
     return jaylib_wrap_vec2(pos);
 }
 
-static Janet cfun_GetDroppedFiles(int32_t argc, Janet *argv) {
+static Janet cfun_LoadDroppedFiles(int32_t argc, Janet *argv) {
     (void) argv;
     janet_fixarity(argc, 0);
-    int count;
+    
     /* Do we need to free this/these? */
-    char **results = GetDroppedFiles(&count);
+    FilePathList files = LoadDroppedFiles();
     JanetArray *array = janet_array(0);
-    for (int i = 0; i < count; i++) {
-        janet_array_push(array, janet_cstringv(results[i]));
+    for (int i = 0; i < files.count; i++) {
+        janet_array_push(array, janet_cstringv(files.paths[i]));
     }
+    UnloadDroppedFiles(files);
     return janet_wrap_array(array);
-}
-
-static Janet cfun_ClearDroppedFiles(int32_t argc, Janet *argv) {
-    (void) argv;
-    janet_fixarity(argc, 0);
-    ClearDroppedFiles();
-    return janet_wrap_nil();
-}
-
-static Janet cfun_SaveStorageValue(int32_t argc, Janet *argv) {
-    janet_fixarity(argc, 2);
-    int32_t position = janet_getinteger(argv, 0);
-    int32_t value = janet_getinteger(argv, 1);
-    SaveStorageValue(position, value);
-    return janet_wrap_nil();
-}
-
-static Janet cfun_LoadStorageValue(int32_t argc, Janet *argv) {
-    janet_fixarity(argc, 1);
-    int32_t position = janet_getinteger(argv, 0);
-    return janet_wrap_integer(LoadStorageValue(position));
 }
 
 static Janet cfun_OpenUrl(int32_t argc, Janet *argv) {
@@ -1208,22 +1188,9 @@ static JanetReg core_cfuns[] = {
         "(get-touch-position index)\n\n" 
         "Get touch position XY for a touch point index (relative to screen size)"
     },
-    {"get-dropped-files", cfun_GetDroppedFiles, 
-        "(get-dropped-files count)\n\n" 
+    {"load-dropped-files", cfun_LoadDroppedFiles, 
+        "(load-dropped-files count)\n\n" 
         "Get dropped files names (memory should be freed)"
-    },
-    {"clear-dropped-files", cfun_ClearDroppedFiles, 
-        "(clear-dropped-files)\n\n" 
-        "Clear dropped files paths buffer (free memory)"
-    },
-    {"save-storage-value", cfun_SaveStorageValue, 
-        "(save-storage-value position value)\n\n" 
-        "Save integer value to storage file (to defined position), "
-        "returns true on success"
-    },
-    {"load-storage-value", cfun_LoadStorageValue, 
-        "(load-storage-value position)\n\n" 
-        "Load integer value from storage file (from defined position)"
     },
     {"open-url", cfun_OpenUrl, 
         "(open-url url)\n\n" 

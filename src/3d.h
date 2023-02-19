@@ -29,18 +29,6 @@ static Janet cfun_DrawCube(int32_t argc, Janet *argv) {
     return janet_wrap_nil();
 }
 
-static Janet cfun_DrawCubeTexture(int32_t argc, Janet *argv) {
-    janet_fixarity(argc, 6);
-    Texture2D *texture = jaylib_gettexture2d(argv, 0);
-    Vector3 position = jaylib_getvec3(argv, 1);
-    float width = (float) janet_getnumber(argv, 2);
-    float height = (float) janet_getnumber(argv, 3);
-    float length = (float) janet_getnumber(argv, 4);
-    Color color = jaylib_getcolor(argv, 5);
-    DrawCubeTexture(*texture, position, width, height, length, color);
-    return janet_wrap_nil();
-}
-
 static Janet cfun_DrawGrid(int32_t argc, Janet *argv) {
     janet_fixarity(argc, 2);
     int slices = janet_getinteger(argv, 0);
@@ -174,10 +162,6 @@ static JanetReg threed_cfuns[] = {
     {"draw-cube-wires-v", cfun_DrawCubeWiresV, 
         "(draw-cube-wires-v [center-x center-y center-z] [width height length] color)\n\n"
         "Draw cube wires (Vector version)"
-    },
-    {"draw-cube-texture", cfun_DrawCubeTexture, 
-        "(draw-cube-texture texture [center-x center-y center-z] width height length color)\n\n"
-        "Draw cube textured"
     },
     {"draw-grid", cfun_DrawGrid, 
         "(draw-grid slices spacing)\n\n"
